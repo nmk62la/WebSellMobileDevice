@@ -17,13 +17,10 @@ var userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    avatar: {
-      type: String,
-    },
     mobile: {
       type: String,
+      required: true,
       unique: true,
-      require: true,
     },
     password: {
       type: String,
@@ -31,20 +28,13 @@ var userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: [1945, 1979],
-      default: 1979,
+      default: "user",
     },
-    cart: [
-      {
-        product: { type: mongoose.Types.ObjectId, ref: "Product" },
-        quantity: Number,
-        color: String,
-        price: Number,
-        thumbnail: String,
-        title: String,
-      },
-    ],
-    address: String,
+    cart: {
+      type: Array,
+      default: [],
+    },
+    address: [{ type: mongoose.Types.ObjectId, ref: "Address" }],
     wishlist: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
     isBlocked: {
       type: Boolean,
@@ -60,9 +50,6 @@ var userSchema = new mongoose.Schema(
       type: String,
     },
     passwordResetExpires: {
-      type: String,
-    },
-    registerToken: {
       type: String,
     },
   },
