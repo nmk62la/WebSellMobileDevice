@@ -1,3 +1,12 @@
 git add .
 git commit -m "..."
 git push origin master
+
+const response = await queryCommand.exec(); // Chuyển đổi sang await
+  const counts = await Product.find(formatedQueries).countDocuments();
+
+  return res.status(200).json({
+    success: response ? true : false,
+    counts,
+    products: response || "Cannot get products",
+  });

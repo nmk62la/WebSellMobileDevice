@@ -65,7 +65,7 @@ const getProducts = asyncHandler(async (req, res) => {
   queryCommand.skip(skip).limit(limit);
   // Execute query
   // Số lượng sp thỏa mãn điều kiện !== số lượng sp trả về 1 lần gọi API
-  const response = await queryCommand.exec();
+  const response = await queryCommand.exec(); // Chuyển đổi sang await
   const counts = await Product.find(formatedQueries).countDocuments();
 
   return res.status(200).json({
@@ -151,6 +151,10 @@ const ratings = asyncHandler(async (req, res) => {
     updatedProduct,
   });
 });
+const uploadImagesProduct = asyncHandler(async (req, res) => {
+  console.log(req.file);
+  return res.json("OKE");
+});
 module.exports = {
   createProduct,
   getProduct,
@@ -158,4 +162,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   ratings,
+  uploadImagesProduct,
 };
