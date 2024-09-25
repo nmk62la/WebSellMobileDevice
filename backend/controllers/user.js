@@ -66,7 +66,6 @@ const login = asyncHandler(async (req, res) => {
     throw new Error("Invalid credentials!");
   }
 });
-
 const getCurrent = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   const user = await User.findById(_id).select("-refreshToken -password -role");
@@ -75,7 +74,6 @@ const getCurrent = asyncHandler(async (req, res) => {
     rs: user ? user : "User not found",
   });
 });
-
 const refreshAccessToken = asyncHandler(async (req, res) => {
   // Lấy token từ cookies
   const cookie = req.cookies;
@@ -143,7 +141,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
     rs,
   });
 });
-
 const resetPassword = asyncHandler(async (req, res) => {
   const { password, token } = req.body;
   if (!password || !token) throw new Error("Missing imputs");
@@ -166,7 +163,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     mes: user ? "Updated password" : "Something went wrong",
   });
 });
-
 const getUsers = asyncHandler(async (req, res) => {
   const response = await User.find().select("-refreshToken -password -role");
   return res.status(200).json({
@@ -174,7 +170,6 @@ const getUsers = asyncHandler(async (req, res) => {
     users: response,
   });
 });
-
 const deleteUser = asyncHandler(async (req, res) => {
   const { _id } = req.query;
   if (!_id) throw new Error("Missing inputs");
@@ -186,7 +181,6 @@ const deleteUser = asyncHandler(async (req, res) => {
       : "No user delete",
   });
 });
-
 const updateUser = asyncHandler(async (req, res) => {
   //
   const { _id } = req.user;
@@ -212,7 +206,61 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
     updatedUser: response ? response : "Some thing went wrong",
   });
 });
-
+const updateUserAddress = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  if (!req.body.address) throw new Error("Missing inputs");
+  const response = await User.findByIdAndUpdate(
+    _id,
+    { $push: { address: req.body.address } },
+    { new: true }
+  ).select("-password -role -refreshToken");
+  return res.status(200).json({
+    success: response ? true : false,
+    updatedUser: response ? response : "Some thing went wrong",
+  });
+});
+const updateCart = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { pid, quantity, color } = req.body;
+  if (!pid || !quantity || !color) throw new Error("Missing inputs");
+  const user = await User.findById(_id).select("cart");
+  const alreadyProduct = user?.cart?.find(
+    (el) => el.product.toString() === pid
+  );
+  if (alreadyProduct) {
+    if (alreadyProduct.color === color) {
+      const response = await User.updateOne(
+        { cart: { $elemMatch: alreadyProduct } },
+        { $set: { "cart.$.quantity": quantity } },
+        { new: true }
+      );
+      return res.status(200).json({
+        success: response ? true : false,
+        updatedUser: response ? response : "Some thing went wrong",
+      });
+    } else {
+      const response = await User.findByIdAndUpdate(
+        _id,
+        { $push: { cart: { product: pid, quantity, color } } },
+        { new: true }
+      );
+      return res.status(200).json({
+        success: response ? true : false,
+        updatedUser: response ? response : "Some thing went wrong",
+      });
+    }
+  } else {
+    const response = await User.findByIdAndUpdate(
+      _id,
+      { $push: { cart: { product: pid, quantity, color } } },
+      { new: true }
+    );
+    return res.status(200).json({
+      success: response ? true : false,
+      updatedUser: response ? response : "Some thing went wrong",
+    });
+  }
+});
 module.exports = {
   register,
   login,
@@ -225,4 +273,6 @@ module.exports = {
   deleteUser,
   updateUser,
   updateUserByAdmin,
+  updateUserAddress,
+  updateCart,
 };
