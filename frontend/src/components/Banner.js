@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react'
 
 const Banner = () => {
-  return (
-    <div className="w-full">
-      <img
-        src="https://cdn.shopify.com/s/files/1/1903/4853/files/slideshow3-home2_1920x.jpg?v=1613166679"
-        alt="banner"
-        className="w-full object-contain"
-      />
-    </div>
-  );
-};
+    return (
+        <div className='w-full'>
+            <img
+                src="https://img.freepik.com/premium-vector/shopping-online-modern-marketing-mobile-application-internet-shops-website-concept-web-page-design-website-banner-mobile-website-3d-vector-illustration_473922-253.jpg"
+                alt="banner"
+                className='h-[400px] w-full object-cover'
+            />
+        </div>
+    )
+}
 
-export default Banner;
+export default Banner
