@@ -1,12 +1,12 @@
 import React, { useState, useEffect, memo } from "react";
-import icons from "../ultils/icons";
-import { apiGetProducts } from "../apis/product";
+import icons from "ultils/icons";
+import { apiGetProducts } from "apis/product";
 import {
   renderStarFromNumber,
   formatMoney,
   secondsToHms,
-} from "../ultils/helpers";
-import { Countdown } from "./";
+} from "ultils/helpers";
+import { Countdown } from "components";
 import moment from "moment";
 
 const { AiFillStar, AiOutlineMenu } = icons;

@@ -5,6 +5,7 @@ import {
   useParams,
   createSearchParams,
 } from "react-router-dom";
+import { memo } from "react";
 
 const PagiItem = ({ children }) => {
   const navigate = useNavigate();
@@ -40,4 +41,4 @@ const PagiItem = ({ children }) => {
   );
 };
 
-export default PagiItem;
+export default memo(PagiItem);
