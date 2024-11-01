@@ -29,11 +29,16 @@ const settings = {
 const DetailProduct = () => {
   const { pid, title, category } = useParams();
   const [product, setProduct] = useState(null);
+  const [currentImage, setCurrentImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState(null);
+  const [update, setUpdate] = useState(false);
   const fetchProductData = async () => {
     const response = await apiGetProduct(pid);
-    if (response.success) setProduct(response.productData);
+    if (response.success) {
+      setProduct(response.productData);
+      setCurrentImage(response.productData?.thumb);
+    }
   };
   const fetchProducts = async () => {
     const response = await apiGetProducts({ category });
@@ -44,7 +49,14 @@ const DetailProduct = () => {
       fetchProductData();
       fetchProducts();
     }
+    window.scrollTo(0, 0);
   }, [pid]);
+  useEffect(() => {
+    if (pid) fetchProductData();
+  }, [update]);
+  const rerender = useCallback(() => {
+    setUpdate(!update);
+  }, [update]);
 
   const handleQuantity = useCallback(
     (number) => {
@@ -64,6 +76,11 @@ const DetailProduct = () => {
     },
     [quantity]
   );
+
+  const handleClickImage = (e, el) => {
+    e.stopPropagation();
+    setCurrentImage(el);
+  };
   return (
     <div className="w-full">
       <div className="h-[81px] flex justify-center items-center bg-gray-100">
@@ -74,16 +91,16 @@ const DetailProduct = () => {
       </div>
       <div className="w-main m-auto mt-4 flex">
         <div className="flex flex-col gap-4 w-2/5">
-          <div className="w-[458px] h-[458px] border">
+          <div className="w-[458px] h-[458px] border overflow-hidden">
             <ReactImageMagnify
               {...{
                 smallImage: {
                   alt: "",
                   isFluidWidth: true,
-                  src: product?.thumb,
+                  src: currentImage,
                 },
                 largeImage: {
-                  src: product?.thumb,
+                  src: currentImage,
                   width: 1800,
                   height: 1500,
                 },
@@ -98,9 +115,10 @@ const DetailProduct = () => {
               {product?.images?.map((el) => (
                 <div className="flex-1" key={el}>
                   <img
+                    onClick={(e) => handleClickImage(e, el)}
                     src={el}
                     alt="sub-product"
-                    className="h-[143px] border object-contain"
+                    className="w-[143px] cursor-pointer h-[143px] border object-cover"
                   />
                 </div>
               ))}
@@ -112,13 +130,13 @@ const DetailProduct = () => {
             <h2 className="text-[30px] font-semibold">{`${formatMoney(
               fotmatPrice(product?.price)
             )} VNĐ`}</h2>
-            <span className="text-sm text-main">{`Kho: ${product?.quantity}`}</span>
+            <span className="text-sm text-main">{`In stock: ${product?.quantity}`}</span>
           </div>
           <div className="flex items-center gap-1">
             {renderStarFromNumber(product?.totalRatings)?.map((el, index) => (
               <span key={index}>{el}</span>
             ))}
-            <span className="text-sm text-main italic">{`(Đã bán: ${product?.sold} cái)`}</span>
+            <span className="text-sm text-main italic">{`(Sold: ${product?.sold} pieces)`}</span>
           </div>
           <ul className="list-square text-sm text-gray-500 pl-4">
             {product?.description?.map((el) => (
@@ -151,7 +169,13 @@ const DetailProduct = () => {
         </div>
       </div>
       <div className="w-main m-auto mt-8">
-        <ProductInfomation />
+        <ProductInfomation
+          totalRatings={product?.totalRatings}
+          ratings={product?.ratings}
+          nameProduct={product?.title}
+          pid={product?._id}
+          rerender={rerender}
+        />
       </div>
       <div className="w-main m-auto mt-8">
         <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">
