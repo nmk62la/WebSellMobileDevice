@@ -37,11 +37,11 @@ const getProducts = asyncHandler(async (req, res) => {
   // Filtering
   if (queries?.title)
     formatedQueries.title = { $regex: queries.title, $options: "i" };
+  if (queries?.category)
+    formatedQueries.category = { $regex: queries.category, $options: "i" };
   let queryCommand = Product.find(formatedQueries);
 
   // Sorting
-
-  // acb,efg => [abc,efg] => abc efg
   if (req.query.sort) {
     const sortBy = req.query.sort.split(",").join(" ");
     queryCommand = queryCommand.sort(sortBy);
@@ -54,26 +54,30 @@ const getProducts = asyncHandler(async (req, res) => {
   }
 
   // Pagination
-  // limit: số object lấy về 1 gọi API
-  // skip: 2
-  // 1 2 3 ... 10
-  // +2 => 2
-  // +dsdsad => NaN
   const page = +req.query.page || 1;
   const limit = +req.query.limit || process.env.LIMIT_PRODUCTS;
   const skip = (page - 1) * limit;
-  queryCommand.skip(skip).limit(limit);
-  // Execute query
-  // Số lượng sp thỏa mãn điều kiện !== số lượng sp trả về 1 lần gọi API
-  const response = await queryCommand.exec(); // Chuyển đổi sang await
-  const counts = await Product.find(formatedQueries).countDocuments();
+  queryCommand = queryCommand.skip(skip).limit(limit);
 
-  return res.status(200).json({
-    success: response ? true : false,
-    counts,
-    products: response || "Cannot get products",
-  });
+  // Execute query
+  try {
+    // Sử dụng async/await để lấy dữ liệu
+    const response = await queryCommand;
+    const counts = await Product.find(formatedQueries).countDocuments();
+    return res.status(200).json({
+      success: response ? true : false,
+      counts,
+      products: response ? response : "Cannot get products",
+    });
+  } catch (err) {
+    // Xử lý lỗi khi thực hiện query
+    return res.status(500).json({
+      success: false,
+      error: err.message,
+    });
+  }
 });
+
 const updateProduct = asyncHandler(async (req, res) => {
   const { pid } = req.params;
   if (req.body && req.body.title) req.body.slug = slugify(req.body.title);
