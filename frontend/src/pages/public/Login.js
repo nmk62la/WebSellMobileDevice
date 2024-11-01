@@ -177,6 +177,7 @@ const Login = () => {
             nameKey="email"
             invalidFields={invalidFields}
             setInvalidFieds={setInvalidFields}
+            fullWidth
           />
           {isRegister && (
             <InputField
@@ -185,6 +186,7 @@ const Login = () => {
               nameKey="mobile"
               invalidFields={invalidFields}
               setInvalidFieds={setInvalidFields}
+              fullWidth
             />
           )}
           <InputField
@@ -194,6 +196,7 @@ const Login = () => {
             type="password"
             invalidFields={invalidFields}
             setInvalidFieds={setInvalidFields}
+            fullWidth
           />
           <Button handleOnClick={handleSubmit} fw>
             {isRegister ? "Register" : "Login"}
