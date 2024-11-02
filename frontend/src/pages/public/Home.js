@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 import icons from "../../ultils/icons";
 import withBaseComponent from "hocs/withBaseComponent";
 import { createSearchParams } from "react-router-dom";
-import { apiGetBlogs } from "apis/blog";
 
 const { IoIosArrowForward } = icons;
 const Home = ({ navigate }) => {
