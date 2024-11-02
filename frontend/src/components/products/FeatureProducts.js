@@ -12,6 +12,8 @@ const FeatureProducts = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  console.log(products);
   return (
     <div className="w-full">
       <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">
@@ -19,13 +21,7 @@ const FeatureProducts = () => {
       </h3>
       <div className="flex flex-wrap mt-[15px] mx-[-10px]">
         {products?.map((el) => (
-          <ProductCard
-            key={el._id}
-            image={el.thumb}
-            title={el.title}
-            totalRatings={el.totalRatings}
-            price={el.price}
-          />
+          <ProductCard key={el._id} pid={el._id} image={el.thumb} {...el} />
         ))}
       </div>
       <div className="grid grid-cols-4 grid-rows-2 gap-4">

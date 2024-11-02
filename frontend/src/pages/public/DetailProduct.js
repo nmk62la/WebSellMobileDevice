@@ -93,7 +93,6 @@ const DetailProduct = ({ isQuickView, data, location, dispatch, navigate }) => {
       fetchProductData();
       fetchProducts();
     }
-    window.scrollTo(0, 0);
     titleRef.current.scrollIntoView({ block: "center" });
   }, [pid]);
   useEffect(() => {

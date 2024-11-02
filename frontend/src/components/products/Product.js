@@ -8,7 +8,7 @@ import icons from "ultils/icons";
 import withBaseComponent from "hocs/withBaseComponent";
 import { showModal } from "store/app/appSlice";
 import { DetailProduct } from "pages/public";
-import { apiUpdateCart } from "apis";
+import { apiUpdateCart, apiUpdateWishlist } from "apis";
 import { toast } from "react-toastify";
 import { getCurrent } from "store/user/asyncActions";
 import { useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import path from "ultils/path";
 import { BsFillCartCheckFill, BsFillCartPlusFill } from "react-icons/bs";
 import { createSearchParams } from "react-router-dom";
+import clsx from "clsx";
 
 const { AiFillEye, BsFillSuitHeartFill } = icons;
 
@@ -26,6 +27,8 @@ const Product = ({
   navigate,
   dispatch,
   location,
+  pid,
+  className,
 }) => {
   const [isShowOption, setIsShowOption] = useState(false);
   const { current } = useSelector((state) => state.user);
@@ -62,7 +65,13 @@ const Product = ({
         dispatch(getCurrent());
       } else toast.error(response.mes);
     }
-    if (flag === "WISHLIST") console.log("WISHLIST");
+    if (flag === "WISHLIST") {
+      const response = await apiUpdateWishlist(pid);
+      if (response.success) {
+        dispatch(getCurrent());
+        toast.success(response.mes);
+      } else toast.error(response.mes);
+    }
     if (flag === "QUICK_VIEW") {
       dispatch(
         showModal({
@@ -78,7 +87,7 @@ const Product = ({
     }
   };
   return (
-    <div className="w-full text-base px-[10px]">
+    <div className={clsx("w-full text-base px-[10px]", className)}>
       <div
         className="w-full border p-[15px] flex flex-col items-center"
         onClick={(e) =>
@@ -124,7 +133,17 @@ const Product = ({
                 title="Add to Wishlist"
                 onClick={(e) => handleClickOptions(e, "WISHLIST")}
               >
-                <SelectOption icon={<BsFillSuitHeartFill />} />
+                <SelectOption
+                  icon={
+                    <BsFillSuitHeartFill
+                      color={
+                        current?.wishlist?.some((i) => i._id === pid)
+                          ? "red"
+                          : "gray"
+                      }
+                    />
+                  }
+                />
               </span>
             </div>
           )}

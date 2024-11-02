@@ -31,8 +31,8 @@ const MemberSidebar = () => {
         <small>{`${current?.lastname} ${current?.firstname}`}</small>
       </div>
       <div>
-        {memberSidebar.map((el) => (
-          <Fragment key={el.id}>
+        {memberSidebar.map((el, idx) => (
+          <Fragment key={idx}>
             {el.type === "SINGLE" && (
               <NavLink
                 to={el.path}
