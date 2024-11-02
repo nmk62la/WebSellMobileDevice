@@ -20,7 +20,7 @@ const Pagination = ({ totalCount }) => {
   return (
     <div className="flex w-full justify-between items-center">
       {!+params.get("page") ? (
-        <span className="text-sm italic">{`Show products ${Math.min(
+        <span className="text-sm hidden lg:inline-block italic">{`Show products ${Math.min(
           totalCount,
           1
         )} - ${Math.min(
@@ -31,11 +31,11 @@ const Pagination = ({ totalCount }) => {
         ""
       )}
       {+params.get("page") ? (
-        <span className="text-sm italic">{`Show products ${range()} of ${totalCount}`}</span>
+        <span className="text-sm hidden lg:inline-block italic">{`Show products ${range()} of ${totalCount}`}</span>
       ) : (
         ""
       )}
-      <div className="flex items-center">
+      <div className="flex mt-8 lg:mt-0 items-center">
         {pagination?.map((el) => (
           <PagiItem key={el}>{el}</PagiItem>
         ))}

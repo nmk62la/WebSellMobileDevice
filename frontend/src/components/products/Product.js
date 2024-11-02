@@ -87,7 +87,7 @@ const Product = ({
     }
   };
   return (
-    <div className={clsx("w-full text-base px-[10px]", className)}>
+    <div className={clsx("w-full col-span-1 text-base px-[10px]", className)}>
       <div
         className="w-full border p-[15px] flex flex-col items-center"
         onClick={(e) =>

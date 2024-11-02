@@ -83,12 +83,12 @@ const Products = () => {
   return (
     <div className="w-full">
       <div className="h-[81px] flex justify-center items-center bg-gray-100">
-        <div className="w-main">
+        <div className="lg:w-main w-screen px-4 lg:px-0">
           <h3 className="font-semibold uppercase">{category}</h3>
           <Breadcrumb category={category} />
         </div>
       </div>
-      <div className="w-main border p-4 flex justify-between mt-8 m-auto">
+      <div className="lg:w-main border p-4 flex lg:pr-4 pr-8 flex-col md:flex-row gap-4 md:justify-between mt-8 m-auto">
         <div className="w-4/5 flex-auto flex flex-col gap-3">
           <span className="font-semibold text-sm">Filter by</span>
           <div className="flex items-center gap-4">
@@ -116,16 +116,10 @@ const Products = () => {
           </div>
         </div>
       </div>
-      <div className="mt-8 w-main m-auto">
-        <Masonry
-          breakpointCols={breakpointColumnsObj}
-          className="my-masonry-grid flex mx-[-10px]"
-          columnClassName="my-masonry-grid_column"
-        >
-          {products?.products?.map((el) => (
-            <Product key={el._id} pid={el._id} productData={el} normal={true} />
-          ))}
-        </Masonry>
+      <div className="mt-8 w-main m-auto grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-4">
+        {products?.products?.map((el) => (
+          <Product key={el._id} pid={el._id} productData={el} normal={true} />
+        ))}
       </div>
       <div className="w-main m-auto my-4 flex justify-end">
         <Pagination totalCount={products?.counts} />
