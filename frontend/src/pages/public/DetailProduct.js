@@ -73,6 +73,14 @@ const DetailProduct = ({ isQuickView, data, location, dispatch, navigate }) => {
         price: product?.varriants?.find((el) => el.sku === varriant)?.price,
         thumb: product?.varriants?.find((el) => el.sku === varriant)?.thumb,
       });
+    } else {
+      setCurrentProduct({
+        title: product?.title,
+        color: product?.color,
+        images: product?.images || [],
+        price: product?.price,
+        thumb: product?.thumb,
+      });
     }
   }, [varriant]);
   const fetchProducts = async () => {
@@ -136,8 +144,11 @@ const DetailProduct = ({ isQuickView, data, location, dispatch, navigate }) => {
       });
     const response = await apiUpdateCart({
       pid,
-      color: currentProduct.color,
+      color: currentProduct.color || product?.color,
       quantity,
+      price: currentProduct.price || product.price,
+      thumbnail: currentProduct.thumb || product.thumb,
+      title: currentProduct.title || product.title,
     });
     if (response.success) {
       toast.success(response.mes);
@@ -192,7 +203,7 @@ const DetailProduct = ({ isQuickView, data, location, dispatch, navigate }) => {
               className="image-slider flex gap-2 justify-between"
               {...settings}
             >
-              {currentProduct.images.length === 0 &&
+              {currentProduct.images?.length === 0 &&
                 product?.images?.map((el) => (
                   <div className="flex-1" key={el}>
                     <img
@@ -203,7 +214,7 @@ const DetailProduct = ({ isQuickView, data, location, dispatch, navigate }) => {
                     />
                   </div>
                 ))}
-              {currentProduct.images.length > 0 &&
+              {currentProduct.images?.length > 0 &&
                 currentProduct.images?.map((el) => (
                   <div className="flex-1" key={el}>
                     <img
@@ -273,6 +284,7 @@ const DetailProduct = ({ isQuickView, data, location, dispatch, navigate }) => {
               </div>
               {product?.varriants?.map((el) => (
                 <div
+                  key={el.sku}
                   onClick={() => setVarriant(el.sku)}
                   className={clsx(
                     "flex items-center gap-2 p-2 border cursor-pointer",
