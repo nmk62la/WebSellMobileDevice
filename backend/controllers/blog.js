@@ -2,12 +2,13 @@ const Blog = require("../models/blog");
 const asyncHandler = require("express-async-handler");
 
 const createNewBlog = asyncHandler(async (req, res) => {
-  const { title, description, category } = req.body;
-  if (!title || !description || !category) throw new Error("Missing inputs");
-  const response = await Blog.create(req.body);
+  const { title, description, hashtags } = req.body;
+  if (!req.file) throw new Error("Missing inputs");
+  if (!title || !description || !hashtags) throw new Error("Missing inputs");
+  const response = await Blog.create({ ...req.body, image: req.file.path });
   return res.json({
     success: response ? true : false,
-    createdBlog: response ? response : "Cannot create new blog",
+    mes: response ? "Created blog." : "Cannot create new blog",
   });
 });
 const updateBlog = asyncHandler(async (req, res) => {

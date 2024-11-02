@@ -48,7 +48,7 @@ function App() {
     dispatch(getCategories());
   }, []);
   return (
-    <div className="font-main">
+    <div className="font-jp">
       {isShowCart && (
         <div
           onClick={() => dispatch(showCart())}

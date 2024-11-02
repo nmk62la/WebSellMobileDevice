@@ -15,6 +15,8 @@ export { default as CustomSlider } from "./common/CustomSlider";
 // export { default as TopHeader } from './headers/TopHeader'
 export { default as Footer } from "./footer/Footer";
 export { default as InputField } from "./inputs/InputField";
+export { default as MdEditor } from "./inputs/MdEditor";
+export { default as InputFile } from "./inputs/InputFile";
 export { default as Button } from "./buttons/Button";
 export { default as Breadcrumb } from "./common/Breadcrumb";
 export { default as Congrat } from "./common/Congrat";

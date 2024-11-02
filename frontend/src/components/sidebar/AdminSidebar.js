@@ -61,9 +61,9 @@ const AdminSidebar = () => {
                 </div>
                 {actived.some((id) => +id === +el.id) && (
                   <div className="flex flex-col">
-                    {el.submenu.map((item) => (
+                    {el.submenu.map((item, idx) => (
                       <NavLink
-                        key={el.text}
+                        key={idx}
                         to={item.path}
                         onClick={(e) => e.stopPropagation()}
                         className={({ isActive }) =>

@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     fontFamily: {
       main: ["Poppins", "sans-serif;"],
+      jp: ["Noto Sans JP", "sans-serif;"],
     },
     listStyleType: {
       none: "none",
