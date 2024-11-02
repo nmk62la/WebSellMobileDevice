@@ -46,14 +46,13 @@ const getProducts = asyncHandler(async (req, res) => {
     (macthedEl) => `$${macthedEl}`
   );
   const formatedQueries = JSON.parse(queryString);
-
   let colorQueryObject = {};
-
-  // Filtering
   if (queries?.title)
     formatedQueries.title = { $regex: queries.title, $options: "i" };
   if (queries?.category)
     formatedQueries.category = { $regex: queries.category, $options: "i" };
+  if (queries?.brand)
+    formatedQueries.brand = { $regex: queries.brand, $options: "i" };
   if (queries?.color) {
     delete formatedQueries.color;
     const colorArr = queries.color?.split(",");
@@ -94,27 +93,19 @@ const getProducts = asyncHandler(async (req, res) => {
   const page = +req.query.page || 1;
   const limit = +req.query.limit || process.env.LIMIT_PRODUCTS;
   const skip = (page - 1) * limit;
-  queryCommand = queryCommand.skip(skip).limit(limit);
-
+  queryCommand.skip(skip).limit(limit);
   // Execute query
-  try {
-    // Sử dụng async/await để lấy dữ liệu
-    const response = await queryCommand;
+  // Số lượng sp thỏa mãn điều kiện !== số lượng sp trả về 1 lần gọi API
+  queryCommand.exec(async (err, response) => {
+    if (err) throw new Error(err.message);
     const counts = await Product.find(qr).countDocuments();
     return res.status(200).json({
       success: response ? true : false,
       counts,
       products: response ? response : "Cannot get products",
     });
-  } catch (err) {
-    // Xử lý lỗi khi thực hiện query
-    return res.status(500).json({
-      success: false,
-      error: err.message,
-    });
-  }
+  });
 });
-
 const updateProduct = asyncHandler(async (req, res) => {
   const { pid } = req.params;
   const files = req?.files;
@@ -126,85 +117,28 @@ const updateProduct = asyncHandler(async (req, res) => {
   });
   return res.status(200).json({
     success: updatedProduct ? true : false,
-    mes: updatedProduct ? "Updated" : "Cannot update product",
+    mes: updatedProduct ? "Updated." : "Cannot update product",
   });
 });
-
 const deleteProduct = asyncHandler(async (req, res) => {
   const { pid } = req.params;
   const deletedProduct = await Product.findByIdAndDelete(pid);
   return res.status(200).json({
     success: deletedProduct ? true : false,
-    mes: deletedProduct ? "Deleted" : "Cannot delete product",
+    mes: deletedProduct ? "Deleted." : "Cannot delete product",
   });
 });
-
-// const ratings = asyncHandler(async (req, res) => {
-//   const { _id } = req.user;
-//   const { star, comment, pid, updatedAt } = req.body;
-//   if (!star || !pid) throw new Error("Missing inputs");
-//   const ratingProduct = await Product.findById(pid);
-//   const alreadyRating = ratingProduct?.ratings?.find(
-//     (el) => el.postedBy.toString() === _id
-//   );
-//   // console.log(alreadyRating);
-//   if (alreadyRating) {
-//     // update star & comment
-//     await Product.updateOne(
-//       {
-//         ratings: { $elemMatch: alreadyRating },
-//       },
-//       {
-//         $set: {
-//           "ratings.$.star": star,
-//           "ratings.$.comment": comment,
-//           "ratings.$.updatedAt": updatedAt,
-//         },
-//       },
-//       { new: true }
-//     );
-//   } else {
-//     // add star & comment
-//     await Product.findByIdAndUpdate(
-//       pid,
-//       {
-//         $push: { ratings: { star, comment, postedBy: _id, updatedAt } },
-//       },
-//       { new: true }
-//     );
-//   }
-
-//   // Sum ratings
-//   const updatedProduct = await Product.findById(pid);
-//   const ratingCount = updatedProduct.ratings.length;
-//   const sumRatings = updatedProduct.ratings.reduce(
-//     (sum, el) => sum + +el.star,
-//     0
-//   );
-//   updatedProduct.totalRatings =
-//     Math.round((sumRatings * 10) / ratingCount) / 10;
-
-//   await updatedProduct.save();
-
-//   return res.status(200).json({
-//     status: true,
-//     updatedProduct,
-//   });
-// });
-
 const ratings = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   const { star, comment, pid, updatedAt } = req.body;
   if (!star || !pid) throw new Error("Missing inputs");
   const ratingProduct = await Product.findById(pid);
-  if (!ratingProduct) {
-    return res.status(404).json({ success: false, mes: "Product not found" });
-  }
   const alreadyRating = ratingProduct?.ratings?.find(
     (el) => el.postedBy.toString() === _id
   );
-
+  // console.log(alreadyRating);
   if (alreadyRating) {
+    // update star & comment
     await Product.updateOne(
       {
         ratings: { $elemMatch: alreadyRating },
@@ -219,6 +153,7 @@ const ratings = asyncHandler(async (req, res) => {
       { new: true }
     );
   } else {
+    // add star & comment
     await Product.findByIdAndUpdate(
       pid,
       {
@@ -228,12 +163,8 @@ const ratings = asyncHandler(async (req, res) => {
     );
   }
 
+  // Sum ratings
   const updatedProduct = await Product.findById(pid);
-  if (!updatedProduct) {
-    return res
-      .status(404)
-      .json({ success: false, mes: "Updated product not found" });
-  }
   const ratingCount = updatedProduct.ratings.length;
   const sumRatings = updatedProduct.ratings.reduce(
     (sum, el) => sum + +el.star,
@@ -249,7 +180,6 @@ const ratings = asyncHandler(async (req, res) => {
     updatedProduct,
   });
 });
-
 const uploadImagesProduct = asyncHandler(async (req, res) => {
   const { pid } = req.params;
   if (!req.files) throw new Error("Missing inputs");
@@ -263,7 +193,6 @@ const uploadImagesProduct = asyncHandler(async (req, res) => {
     updatedProduct: response ? response : "Cannot upload images product",
   });
 });
-
 const addVarriant = asyncHandler(async (req, res) => {
   const { pid } = req.params;
   const { title, price, color } = req.body;
@@ -288,7 +217,7 @@ const addVarriant = asyncHandler(async (req, res) => {
   );
   return res.status(200).json({
     success: response ? true : false,
-    mes: response ? "Added varriant" : "Cannot upload images product",
+    mes: response ? "Added varriant." : "Cannot upload images product",
   });
 });
 
