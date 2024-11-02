@@ -274,3 +274,13 @@ export const blockStatus = [
     value: "Active",
   },
 ];
+export const statusOrders = [
+  {
+    label: "Cancalled",
+    value: "Cancalled",
+  },
+  {
+    label: "Succeed",
+    value: "Succeed",
+  },
+];
