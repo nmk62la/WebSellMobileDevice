@@ -36,7 +36,7 @@ const Navigation = () => {
       {showMenu && (
         <div
           onClick={() => setShowMenu(false)}
-          className="absolute inset-0 bg-overlay"
+          className="absolute inset-0 z-[999] bg-overlay"
         >
           <div
             onClick={(e) => e.stopPropagation()}

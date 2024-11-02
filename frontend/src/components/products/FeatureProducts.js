@@ -18,12 +18,12 @@ const FeatureProducts = () => {
       <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">
         FEATURED PRODUCTS
       </h3>
-      <div className="flex flex-wrap mt-[15px] mx-[-10px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-4">
         {products?.map((el) => (
           <ProductCard key={el._id} pid={el._id} image={el.thumb} {...el} />
         ))}
       </div>
-      <div className="grid grid-cols-4 grid-rows-2 gap-4">
+      <div className="grid-cols-4 hidden lg:grid grid-rows-2 gap-4">
         <img
           src="https://cdn.shopify.com/s/files/1/1903/4853/files/banner1-bottom-home2_b96bc752-67d4-45a5-ac32-49dc691b1958_600x.jpg?v=1613166661"
           alt=""

@@ -15,7 +15,7 @@ const ProductCard = ({
   return (
     <div
       onClick={(e) => navigate(`/${category?.toLowerCase()}/${pid}/${title}`)}
-      className="w-1/3 flex-auto cursor-pointer px-[10px] mb-[20px]"
+      className="col-span-1 cursor-pointer"
     >
       <div className="flex w-full border">
         <img

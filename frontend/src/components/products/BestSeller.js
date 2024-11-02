@@ -39,7 +39,7 @@ const BestSeller = () => {
         {tabs.map((el) => (
           <span
             key={el.id}
-            className={`font-semibold uppercase px-8 border-r cursor-pointer text-gray-400 ${
+            className={`font-semibold text-center md:text-start uppercase px-8 border-r cursor-pointer text-gray-400 ${
               activedTab === el.id ? "text-gray-900" : ""
             }`}
             onClick={() => setActivedTab(el.id)}
@@ -48,10 +48,17 @@ const BestSeller = () => {
           </span>
         ))}
       </div>
-      <div className="mt-4 mx-[-10px] border-t-2 border-main pt-4">
+      <div className="mt-4 hidden md:block mx-[-10px] border-t-2 border-main pt-4">
         <CustomSlider products={products} activedTab={activedTab} />
       </div>
-      <div className="w-full flex gap-4 mt-4">
+      <div className="mt-4 md:hidden block mx-[-10px] border-t-2 border-main pt-4">
+        <CustomSlider
+          products={products}
+          slidesToShow={1}
+          activedTab={activedTab}
+        />
+      </div>
+      <div className="w-full flex flex-col md:flex-row gap-4 mt-4">
         <img
           src="https://cdn.shopify.com/s/files/1/1903/4853/files/banner2-home2_2000x_crop_center.png?v=1613166657"
           alt="banner"
