@@ -25,6 +25,9 @@ export const userSlice = createSlice({
     clearMessage: (state) => {
       state.mes = "";
     },
+    // updateCart: (state, action) => {
+
+    //  }
   },
   extraReducers: (builder) => {
     builder.addCase(actions.getCurrent.pending, (state) => {
