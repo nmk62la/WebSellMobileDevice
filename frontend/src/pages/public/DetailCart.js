@@ -2,7 +2,9 @@ import { Breadcrumb, Button } from "components";
 import OrderItem from "components/products/OrderItem";
 import withBaseComponent from "hocs/withBaseComponent";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { formatMoney } from "ultils/helpers";
+import path from "ultils/path";
 
 const DetailCart = ({ location }) => {
   const { currentCart } = useSelector((state) => state.user);
@@ -10,8 +12,8 @@ const DetailCart = ({ location }) => {
     <div className="w-full">
       <div className="h-[81px] flex justify-center items-center bg-gray-100">
         <div className="w-main">
-          <h3 className="font-semibold uppercase">My Cart</h3>
-          <Breadcrumb category={location?.pathname} />
+          <h3 className="font-semibold text-2xl uppercase">My Cart</h3>
+          {/* <Breadcrumb category={location?.pathname?.replace('/', '')?.split('-')?.join(' ')} /> */}
         </div>
       </div>
       <div className="flex flex-col border w-main mx-auto my-8">
@@ -21,7 +23,15 @@ const DetailCart = ({ location }) => {
           <span className="col-span-3 w-full text-center">Price</span>
         </div>
         {currentCart?.map((el) => (
-          <OrderItem key={el._id} el={el} defaultQuantity={el.quantity} />
+          <OrderItem
+            key={el._id}
+            dfQuantity={el.quantity}
+            color={el.color}
+            title={el.title}
+            thumbnail={el.thumbnail}
+            price={el.price}
+            pid={el.product?._id}
+          />
         ))}
       </div>
       <div className="w-main mx-auto flex flex-col mb-12 justify-center items-end gap-3">
@@ -34,7 +44,13 @@ const DetailCart = ({ location }) => {
         <span className="text-xs italic">
           Shipping, taxes, and discounts calculated at checkout
         </span>
-        <Button>Checkout</Button>
+        <Link
+          target="_blank"
+          className="bg-main text-white px-4 py-2 rounded-md"
+          to={`/${path.CHECKOUT}`}
+        >
+          Checkout
+        </Link>
       </div>
     </div>
   );

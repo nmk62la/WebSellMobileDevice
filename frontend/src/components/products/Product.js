@@ -15,10 +15,18 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import path from "ultils/path";
 import { BsFillCartCheckFill, BsFillCartPlusFill } from "react-icons/bs";
+import { createSearchParams } from "react-router-dom";
 
 const { AiFillEye, BsFillSuitHeartFill } = icons;
 
-const Product = ({ productData, isNew, normal, navigate, dispatch }) => {
+const Product = ({
+  productData,
+  isNew,
+  normal,
+  navigate,
+  dispatch,
+  location,
+}) => {
   const [isShowOption, setIsShowOption] = useState(false);
   const { current } = useSelector((state) => state.user);
   const handleClickOptions = async (e, flag) => {
@@ -32,12 +40,22 @@ const Product = ({ productData, isNew, normal, navigate, dispatch }) => {
           cancelButtonText: "Not now!",
           showCancelButton: true,
           confirmButtonText: "Go login page",
-        }).then((rs) => {
-          if (rs.isConfirmed) navigate(`/${path.LOGIN}`);
+        }).then(async (rs) => {
+          if (rs.isConfirmed)
+            navigate({
+              pathname: `/${path.LOGIN}`,
+              search: createSearchParams({
+                redirect: location.pathname,
+              }).toString(),
+            });
         });
       const response = await apiUpdateCart({
-        pid: productData._id,
-        color: productData.color,
+        pid: productData?._id,
+        color: productData?.color,
+        quantity: 1,
+        price: productData?.price,
+        thumbnail: productData?.thumb,
+        title: productData?.title,
       });
       if (response.success) {
         toast.success(response.mes);

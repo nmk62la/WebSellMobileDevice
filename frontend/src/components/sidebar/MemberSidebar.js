@@ -83,6 +83,9 @@ const MemberSidebar = () => {
             )}
           </Fragment>
         ))}
+        <NavLink to={"/"} className={clsx(notActivedStyle)}>
+          Go home
+        </NavLink>
       </div>
     </div>
   );
