@@ -17,8 +17,8 @@ const MdEditor = ({
       <span className="pb-2 font-semibold">{label + ":"}</span>
       <Editor
         apiKey="x966ukewe6wwp2dli2u8f41xmjei8omxtk49m356em9qoizc"
-        initialValue={placeholder}
-        value={value}
+        initialValue={value}
+        // value={value}
         init={{
           height: height,
           menubar: true,

@@ -7,7 +7,7 @@ import {
   FAQ,
   Services,
   DetailProduct,
-  Blogs,
+  DetailBlogs,
   Products,
   FinalRegister,
   ResetPassword,
@@ -27,7 +27,6 @@ import {
   MemberLayout,
   Personal,
   History,
-  MyCart,
   Wishlist,
   Checkout,
 } from "pages/member";
@@ -62,7 +61,7 @@ function App() {
         <Route path={path.CHECKOUT} element={<Checkout />} />
         <Route path={path.PUBLIC} element={<Public />}>
           <Route path={path.HOME} element={<Home />} />
-          <Route path={path.BLOGS} element={<Blogs />} />
+          <Route path={path.BLOGS__ID__TITLE} element={<DetailBlogs />} />
           <Route
             path={path.DETAIL_PRODUCT__CATEGORY__PID__TITLE}
             element={<DetailProduct />}

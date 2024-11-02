@@ -6,17 +6,18 @@ import {
   DealDaily,
   FeatureProducts,
   CustomSlider,
+  Blogs,
 } from "../../components";
 import { useSelector } from "react-redux";
 import icons from "../../ultils/icons";
 import withBaseComponent from "hocs/withBaseComponent";
 import { createSearchParams } from "react-router-dom";
+import { apiGetBlogs } from "apis/blog";
 
 const { IoIosArrowForward } = icons;
 const Home = ({ navigate }) => {
   const { newProducts } = useSelector((state) => state.products);
   const { categories } = useSelector((state) => state.app);
-  const { isLoggedIn, current } = useSelector((state) => state.user);
 
   return (
     <div className="w-full ">
@@ -84,9 +85,7 @@ const Home = ({ navigate }) => {
         </div>
       </div>
       <div className="my-8 w-main m-auto">
-        <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">
-          BLOG POSTS
-        </h3>
+        <Blogs />
       </div>
     </div>
   );

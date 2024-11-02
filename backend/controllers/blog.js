@@ -13,18 +13,54 @@ const createNewBlog = asyncHandler(async (req, res) => {
 });
 const updateBlog = asyncHandler(async (req, res) => {
   const { bid } = req.params;
-  if (Object.keys(req.body).length === 0) throw new Error("Missing inputs");
   const response = await Blog.findByIdAndUpdate(bid, req.body, { new: true });
   return res.json({
     success: response ? true : false,
-    updatedBlog: response ? response : "Cannot update blog",
+    mes: response ? "Updated." : "Cannot update blog",
   });
 });
 const getBlogs = asyncHandler(async (req, res) => {
-  const response = await Blog.find();
-  return res.json({
-    success: response ? true : false,
-    blogs: response ? response : "Cannot get blogs",
+  const queries = { ...req.query };
+  const excludeFields = ["limit", "sort", "page", "fields"];
+  excludeFields.forEach((el) => delete queries[el]);
+  let queryString = JSON.stringify(queries);
+  queryString = queryString.replace(
+    /\b(gte|gt|lt|lte)\b/g,
+    (macthedEl) => `$${macthedEl}`
+  );
+  const formatedQueries = JSON.parse(queryString);
+  let queryObject = {};
+  if (queries?.q) {
+    delete formatedQueries.q;
+    queryObject = {
+      $or: [
+        { title: { $regex: queries.q, $options: "i" } },
+        // { description: { $regex: queries.q, $options: 'i' } },
+      ],
+    };
+  }
+  const qr = { ...formatedQueries, ...queryObject };
+  let queryCommand = Blog.find(qr);
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(",").join(" ");
+    queryCommand = queryCommand.sort(sortBy);
+  }
+  if (req.query.fields) {
+    const fields = req.query.fields.split(",").join(" ");
+    queryCommand = queryCommand.select(fields);
+  }
+  const page = +req.query.page || 1;
+  const limit = +req.query.limit || process.env.LIMIT_PRODUCTS;
+  const skip = (page - 1) * limit;
+  queryCommand.skip(skip).limit(limit);
+  queryCommand.exec(async (err, response) => {
+    if (err) throw new Error(err.message);
+    const counts = await Blog.find(qr).countDocuments();
+    return res.status(200).json({
+      success: response ? true : false,
+      counts,
+      blogs: response ? response : "Cannot get blogs",
+    });
   });
 });
 
