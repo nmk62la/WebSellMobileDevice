@@ -99,8 +99,8 @@ const Login = () => {
     <div className="w-screen h-screen relative">
       {isVerifiedEmail && (
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-overlay z-50 flex flex-col justify-center items-center">
-          <div className="bg-white w-[500px] rounded-md p-8">
-            <h4 className="">
+          <div className="bg-white w-[90%] max-w-[500px] rounded-md p-8">
+            <h4 className="mb-4">
               We sent a code to your mail. Please check your mail and enter your
               code:
             </h4>
@@ -112,7 +112,7 @@ const Login = () => {
             />
             <button
               type="button"
-              className="px-4 py-2 bg-blue-500 font-semibold text-white rounded-md ml-4"
+              className="px-4 py-2 mt-4 mx-auto bg-blue-500 font-semibold text-white rounded-md ml-4"
               onClick={finalRegister}
             >
               Submit
@@ -121,13 +121,13 @@ const Login = () => {
         </div>
       )}
       {isForgotPassword && (
-        <div className="absolute animate-slide-right top-0 left-0 bottom-0 right-0 bg-white flex flex-col items-center py-8 z-50">
-          <div className="flex flex-col gap-4">
+        <div className="absolute animate-slide-right top-0 left-0 bottom-0 right-0 bg-white flex flex-col items-center px-4 py-8 z-50">
+          <div className="flex w-full flex-col gap-4">
             <label htmlFor="email">Enter your email:</label>
             <input
               type="text"
               id="email"
-              className="w-[800px] pb-2 border-b outline-none placeholder:text-sm"
+              className="md:w-[800px] w-full pb-2 border-b outline-none placeholder:text-sm"
               placeholder="Exp: email@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -137,11 +137,15 @@ const Login = () => {
                 name="Submit"
                 handleOnClick={handleForgotPassword}
                 style="px-4 py-2 rounded-md text-white bg-blue-500 text-semibold my-2"
-              />
+              >
+                Submit
+              </Button>
               <Button
                 name="Back"
                 handleOnClick={() => setIsForgotPassword(false)}
-              />
+              >
+                Back
+              </Button>
             </div>
           </div>
         </div>
@@ -151,8 +155,8 @@ const Login = () => {
         alt=""
         className="w-full h-full object-cover"
       />
-      <div className="absolute top-0 bottom-0 left-0 right-1/2 items-center justify-center flex">
-        <div className="p-8 bg-white flex flex-col items-center rounded-md min-w-[500px]">
+      <div className="absolute top-0 bottom-0 left-0 right-0 items-center justify-center flex">
+        <div className="p-8 bg-white flex flex-col items-center rounded-md md:min-w-[500px]">
           <h1 className="text-[28px] font-semibold text-main mb-8">
             {isRegister ? "Register" : "Login"}
           </h1>

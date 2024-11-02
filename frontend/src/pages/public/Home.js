@@ -20,14 +20,14 @@ const Home = ({ navigate }) => {
 
   return (
     <div className="w-full ">
-      <div className="w-main m-auto flex mt-6">
-        <div className="flex flex-col gap-5 w-[25%] flex-auto">
-          <Sidebar />
-          <DealDaily />
-        </div>
-        <div className="flex flex-col gap-5 pl-5 w-[75%] flex-auto">
+      <div className="md:w-main m-auto flex flex-col md:flex-row mt-6">
+        <div className="flex flex-col gap-5 md:pl-5 md:w-[75%] flex-auto">
           <Banner />
           <BestSeller />
+        </div>
+        <div className="flex flex-col gap-5 md:w-[25%] flex-auto">
+          <Sidebar />
+          <DealDaily />
         </div>
       </div>
       <div className="my-8 w-main m-auto">
