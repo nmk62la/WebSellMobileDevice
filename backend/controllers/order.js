@@ -182,7 +182,7 @@ const getDashboard = asyncHandler(async (req, res) => {
             $and: [
               { createdAt: { $gte: new Date(start) } },
               { createdAt: { $lte: new Date(end) } },
-              { status: "Cancelled" },
+              { status: "Pending" },
             ],
           },
         },
