@@ -8,8 +8,10 @@ import { apiUpdateCurrent } from "apis";
 import { getCurrent } from "store/user/asyncActions";
 import { toast } from "react-toastify";
 import { getBase64 } from "ultils/helpers";
+import { useSearchParams } from "react-router-dom";
+import withBaseComponent from "hocs/withBaseComponent";
 
-const Personal = () => {
+const Personal = ({ navigate }) => {
   const {
     register,
     formState: { errors, isDirty },
@@ -19,6 +21,7 @@ const Personal = () => {
   } = useForm();
   const { current } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
   useEffect(() => {
     reset({
       firstname: current?.firstname,
@@ -29,14 +32,6 @@ const Personal = () => {
       address: current?.address,
     });
   }, [current]);
-  // const handleFile = async () => {
-  //     if (watch('avatar') instanceof FileList && watch('avatar').length > 0) {
-  //         return await getBase64(watch('avatar')[0])
-  //     } else return false
-  // }
-  // useEffect(() => {
-  //     if (watch('avatar') && isDirty) handleFile()
-  // }, [watch('avatar')])
   const handleUpdateInfor = async (data) => {
     const formData = new FormData();
     if (data.avatar.length > 0) formData.append("avatar", data.avatar[0]);
@@ -47,6 +42,7 @@ const Personal = () => {
     if (response.success) {
       dispatch(getCurrent());
       toast.success(response.mes);
+      if (searchParams.get("redirect")) navigate(searchParams.get("redirect"));
     } else toast.error(response.mes);
   };
   return (
@@ -145,4 +141,4 @@ const Personal = () => {
   );
 };
 
-export default Personal;
+export default withBaseComponent(Personal);

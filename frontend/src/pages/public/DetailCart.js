@@ -2,12 +2,34 @@ import { Breadcrumb, Button } from "components";
 import OrderItem from "components/products/OrderItem";
 import withBaseComponent from "hocs/withBaseComponent";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, createSearchParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import { formatMoney } from "ultils/helpers";
 import path from "ultils/path";
 
-const DetailCart = ({ location }) => {
-  const { currentCart } = useSelector((state) => state.user);
+const DetailCart = ({ location, navigate }) => {
+  const { currentCart, current } = useSelector((state) => state.user);
+  const handleSubmit = () => {
+    if (!current?.address)
+      return Swal.fire({
+        icon: "info",
+        title: "Almost!",
+        text: "Please update your address before checkout.",
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: "Go update",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed)
+          navigate({
+            pathname: `/${path.MEMBER}/${path.PERSONAL}`,
+            search: createSearchParams({
+              redirect: location.pathname,
+            }).toString(),
+          });
+      });
+    else window.open(`/${path.CHECKOUT}`, "_blank");
+  };
   return (
     <div className="w-full">
       <div className="h-[81px] flex justify-center items-center bg-gray-100">
@@ -44,13 +66,7 @@ const DetailCart = ({ location }) => {
         <span className="text-xs italic">
           Shipping, taxes, and discounts calculated at checkout
         </span>
-        <Link
-          target="_blank"
-          className="bg-main text-white px-4 py-2 rounded-md"
-          to={`/${path.CHECKOUT}`}
-        >
-          Checkout
-        </Link>
+        <Button handleOnClick={handleSubmit}>Checkout</Button>
       </div>
     </div>
   );
