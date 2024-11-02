@@ -202,7 +202,7 @@ export const adminSidebar = [
   {
     id: 3,
     type: "PARENT",
-    text: "Manage products",
+    text: "Products",
     icon: <TbBrandProducthunt size={20} />,
     submenu: [
       {
@@ -221,6 +221,22 @@ export const adminSidebar = [
     text: "Manage orders",
     path: `/${path.ADMIN}/${path.MANAGE_ORDER}`,
     icon: <RiBillLine size={20} />,
+  },
+  {
+    id: 31,
+    type: "PARENT",
+    text: "Blogs",
+    icon: <TbBrandProducthunt size={20} />,
+    submenu: [
+      {
+        text: "Create blog",
+        path: `/${path.ADMIN}/${path.CREATE_BLOG}`,
+      },
+      {
+        text: "Manage blogs",
+        path: `/${path.ADMIN}/${path.MANAGE_BLOGS}`,
+      },
+    ],
   },
 ];
 export const memberSidebar = [
@@ -246,7 +262,7 @@ export const memberSidebar = [
     icon: <RiBillLine size={20} />,
   },
   {
-    id: 4,
+    id: 40,
     type: "SINGLE",
     text: "Wishlist",
     path: `/${path.MEMBER}/${path.WISHLIST}`,

@@ -28,7 +28,7 @@ const updateStatus = asyncHandler(async (req, res) => {
   );
   return res.json({
     success: response ? true : false,
-    response: response ? response : "Something went wrong",
+    mes: response ? "Updated." : "Something went wrong",
   });
 });
 const getUserOrders = asyncHandler(async (req, res) => {
@@ -45,29 +45,8 @@ const getUserOrders = asyncHandler(async (req, res) => {
     (macthedEl) => `$${macthedEl}`
   );
   const formatedQueries = JSON.parse(queryString);
-  // let colorQueryObject = {}
-  // if (queries?.title) formatedQueries.title = { $regex: queries.title, $options: 'i' }
-  // if (queries?.category) formatedQueries.category = { $regex: queries.category, $options: 'i' }
-  // if (queries?.color) {
-  //     delete formatedQueries.color
-  //     const colorArr = queries.color?.split(',')
-  //     const colorQuery = colorArr.map(el => ({ color: { $regex: el, $options: 'i' } }))
-  //     colorQueryObject = { $or: colorQuery }
-  // }
-  // let queryObject = {}
-  // if (queries?.q) {
-  //     delete formatedQueries.q
-  //     queryObject = {
-  //         $or: [
-  //             { color: { $regex: queries.q, $options: 'i' } },
-  //             { title: { $regex: queries.q, $options: 'i' } },
-  //             { category: { $regex: queries.q, $options: 'i' } },
-  //             { brand: { $regex: queries.q, $options: 'i' } },
-  //             { description: { $regex: queries.q, $options: 'i' } },
-  //         ]
-  //     }
-  // }
   const qr = { ...formatedQueries, orderBy: _id };
+  console.log(qr);
   let queryCommand = Order.find(qr);
 
   // Sorting
@@ -112,30 +91,8 @@ const getOrders = asyncHandler(async (req, res) => {
     (macthedEl) => `$${macthedEl}`
   );
   const formatedQueries = JSON.parse(queryString);
-  // let colorQueryObject = {}
-  // if (queries?.title) formatedQueries.title = { $regex: queries.title, $options: 'i' }
-  // if (queries?.category) formatedQueries.category = { $regex: queries.category, $options: 'i' }
-  // if (queries?.color) {
-  //     delete formatedQueries.color
-  //     const colorArr = queries.color?.split(',')
-  //     const colorQuery = colorArr.map(el => ({ color: { $regex: el, $options: 'i' } }))
-  //     colorQueryObject = { $or: colorQuery }
-  // }
-  // let queryObject = {}
-  // if (queries?.q) {
-  //     delete formatedQueries.q
-  //     queryObject = {
-  //         $or: [
-  //             { color: { $regex: queries.q, $options: 'i' } },
-  //             { title: { $regex: queries.q, $options: 'i' } },
-  //             { category: { $regex: queries.q, $options: 'i' } },
-  //             { brand: { $regex: queries.q, $options: 'i' } },
-  //             { description: { $regex: queries.q, $options: 'i' } },
-  //         ]
-  //     }
-  // }
   const qr = { ...formatedQueries };
-  let queryCommand = Order.find(qr);
+  let queryCommand = Order.find(qr).populate("orderBy", "firstname lastname");
 
   // Sorting
   if (req.query.sort) {
@@ -166,9 +123,18 @@ const getOrders = asyncHandler(async (req, res) => {
     });
   });
 });
+const deleteOrderByAdmin = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const rs = await Order.findByIdAndDelete(id);
+  return res.json({
+    success: rs ? true : false,
+    mes: rs ? "Deleted" : "Something went wrong",
+  });
+});
 module.exports = {
   createOrder,
   updateStatus,
   getUserOrders,
   getOrders,
+  deleteOrderByAdmin,
 };
