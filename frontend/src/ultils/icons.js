@@ -5,6 +5,7 @@ import {
   BsFillSuitHeartFill,
   BsShieldShaded,
   BsReplyFill,
+  BsCartPlus,
 } from "react-icons/bs";
 import { FaUserCircle, FaTty } from "react-icons/fa";
 import {
@@ -44,6 +45,7 @@ const icons = {
   MdGroups,
   TbBrandProducthunt,
   RiBillLine,
+  BsCartPlus,
 };
 
 export default icons;
