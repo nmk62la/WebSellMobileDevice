@@ -17,7 +17,7 @@ const Home = () => {
   const { isLoggedIn, current } = useSelector((state) => state.user);
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <div className="w-main m-auto flex mt-6">
         <div className="flex flex-col gap-5 w-[25%] flex-auto">
           <Sidebar />
